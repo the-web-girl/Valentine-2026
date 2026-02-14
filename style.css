@@ -1,5 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");
-
+        @import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+}
+body {
+  width: 100%;
+  max-height: 100vh;
+}
 :root {
   --envelope-x: 300px;
   --envelope-y: 200px;
@@ -199,7 +208,7 @@ body {
   transform: translateY(-10px);
   display: block;
   color: var(--heart-text);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-family: var(--letter-font);
 }
 
@@ -227,8 +236,6 @@ body {
   line-height: 1.1;
   background-color: var(--letter-bg);
   color: var(--letter-text);
-  /* width: var(--letter-x);
-  height: var(--letter-y); */
   user-select: none;
   box-shadow: inset 0 0 20px -5px var(--letter-shadow);
   padding: 3rem 1rem 1rem;
@@ -239,36 +246,36 @@ body {
   overflow: auto;
   text-align: center;
   border: 0;
+    width: 90%;
+  /* width: var(--letter-x); */
+  /* height: var(--letter-y); */
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  transform-style: preserve-3d;
+  transform-origin: top;
+  transition: transform 1.2s ease, opacity 0.6s ease;
+  z-index: 20; /* AU-DESSUS de l'enveloppe */
 }
 
-.letter:active {
-  cursor: grabbing;
+/* État plié (dans l'enveloppe) */
+.letter.folded {
+  transform: translateX(-50%) rotateX(90deg);
+  opacity: 0;
 }
 
-.letter.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+/* Sortie de l'enveloppe (toujours pliée) */
+.letter.out {
+  transform: translateX(-50%) translateY(-160px) rotateX(90deg);
+  opacity: 1;
 }
 
-.letter cite {
-  font-size: 1.25rem;
-  color: var(--letter-text);
-  margin-top: 1rem;
+/* Dépliage comme une carte */
+.letter.open {
+  transform: translateX(-50%) translateY(-160px) rotateX(0deg);
 }
 
-.letter cite::before {
-  content: none;
-}
-
-.letter:nth-child(even) {
-  transform: skew(-2deg) translateY(-4px);
-}
-
-.letter:nth-child(odd) {
-  transform: skew(2deg) translateY(4px);
-}
 
 @media (min-width: 650px) {
   .letter {
@@ -321,6 +328,7 @@ body {
 }
 
 
+
 footer {
     width: 100vw;
     bottom: 0;
@@ -330,7 +338,9 @@ footer {
     justify-content: center;
     z-index: 10;
 }
-
+footer p {
+    font-size: 12px;
+}
 footer a {
     color: white;
 }
