@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lettre animée réaliste</title>
+
+<style>
+/* =========================
+   BASE
+========================= */
+[hidden] { display: none !important; }
+
+:root {
+  --red: #c62828;
+  --duration: 0.8s;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+  font-family: system-ui, sans-serif;
+}
+
+/* =========================
+   ENVELOPPE
+========================= */
+.envelope {
+  position: relative;
+  width: 320px;
+  height: 200px;
+  perspective: 1200px;
+}
+
+/* Corps */
+.envelope-body {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  border: 2px solid #ddd;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Rabat */
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 0, 50% 55%);
+  transform-origin: top;
+  transition: transform var(--duration) ease;
+  z-index: 4;
+}
+
+.envelope.open .envelope-flap {
+  transform: rotateX(-180deg);
+}
+
+/* =========================
+   SCEAU
+========================= */
+.seal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  font-size: 1.8rem;
+  border: none;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.4s ease;
+}
+
+.envelope.open .seal {
+  transform: translate(-50%, -50%) scale(0);
+}
+
+/* =========================
+   LETTRE (PLI RÉEL)
+========================= */
+.letter {
+  position: absolute;
+  bottom: -140px;
+  left: 10%;
+  width: 80%;
+  height: 240px;
+  z-index: 2;
+  transform: translateY(0);
+  transition: transform var(--duration) ease;
+}
+
+/* Lettre sort */
+.envelope.open .letter {
+  transform: translateY(-140px);
+}
+
+/* Faces */
+.letter-half {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.95),
+    rgba(198,40,40,0.2)
+  );
+  backface-visibility: hidden;
+}
+
+/* Haut */
+.letter-top {
+  top: 0;
+  transform-origin: bottom;
+  transform: rotateX(180deg);
+}
+
+/* Bas */
+.letter-bottom {
+  bottom: 0;
+}
+
+/* Dépliage */
+.envelope.unfold .letter-top {
+  transform: rotateX(0deg);
+  transition: transform var(--duration) ease;
+}
+
+/* Contenu */
+.letter-content {
+  padding: 1rem;
+  font-size: 0.9rem;
+}
+
+.letter-content h1 {
+  margin-top: 0;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (min-width: 768px) {
+  .envelope {
+    width: 380px;
+    height: 240px;
+  }
+
+  .letter {
+    height: 280px;
+  }
+}
+
+/* =========================
+   REDUCED MOTION
+========================= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="envelope" aria-live="polite">
+  <div class="envelope-body"></div>
+  <div class="envelope-flap"></div>
+
+  <button class="seal" aria-label="Ouvrir la lettre" aria-expanded="false">
+    ❤
+  </button>
+
+  <!-- LETTRE PLIÉE -->
+  <div class="letter" aria-hidden="true">
+    <div class="letter-half letter-top"></div>
+    <div class="letter-half letter-bottom">
+      <div class="letter-content">
+        <h1>Lorem ipsum</h1>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const envelope = document.querySelector(".envelope");
+const seal = document.querySelector(".seal");
+
+seal.addEventListener("click", () => {
+  envelope.classList.add("open");
+  seal.setAttribute("aria-expanded", "true");
+
+  // Dépliage après la sortie
+  setTimeout(() => {
+    envelope.classList.add("unfold");
+  }, 800);
+});
+</script>
+
+</body>
+</html>
